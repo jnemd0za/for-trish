@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>for you 💌</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Pacifico&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #fff0f5 0%, #ffe4ec 25%, #f3e8ff 60%, #e0f2fe 100%);
+      font-family: 'Quicksand', sans-serif;
+      color: #5c4a5c;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .float {
+      position: absolute;
+      font-size: 1.3rem;
+      opacity: 0.45;
+      animation: floaty 9s ease-in-out infinite;
+      pointer-events: none;
+      user-select: none;
+      z-index: 1;
+    }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-22px) rotate(6deg); }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 32px;
+      padding: 2.6rem 2rem;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 
+        0 25px 50px -12px rgba(220, 160, 190, 0.28),
+        0 0 0 1px rgba(255, 255, 255, 0.7);
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+      animation: softAppear 0.55s ease;
+    }
+
+    @keyframes softAppear {
+      from { opacity: 0; transform: translateY(16px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .big-emoji {
+      font-size: 3.4rem;
+      margin-bottom: 0.9rem;
+      display: inline-block;
+      animation: gentleBounce 2.4s ease-in-out infinite;
+    }
+
+    @keyframes gentleBounce {
+      0%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-9px); }
+      60% { transform: translateY(-4px); }
+    }
+
+    .title {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.85rem;
+      color: #e85a8a;
+      margin-bottom: 0.5rem;
+      font-weight: 400;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: #8a758a;
+      margin-bottom: 1.7rem;
+      line-height: 1.55;
+    }
+
+    .name-pill {
+      display: inline-block;
+      background: #ffe0eb;
+      color: #e85a8a;
+      font-weight: 700;
+      padding: 3px 14px;
+      border-radius: 30px;
+      margin-top: 4px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      min-height: 60px;
+    }
+
+    .btn {
+      border: none;
+      padding: 13px 26px;
+      border-radius: 50px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 5px 14px rgba(0,0,0,0.07);
+      position: relative;
+    }
+
+    .btn-yes {
+      background: linear-gradient(135deg, #ff8fb3, #ff6b9d);
+      color: white;
+    }
+
+    .btn-yes:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 9px 20px rgba(255, 107, 157, 0.32);
+    }
+
+    .btn-no {
+      background: #f7f0f5;
+      color: #a08a9a;
+    }
+
+    .btn-no:hover {
+      background: #efe6ee;
+      transform: translateY(-2px);
+    }
+
+    .btn-continue {
+      background: linear-gradient(135deg, #ff8fb3, #ff6b9d);
+      color: white;
+      margin-top: 0.8rem;
+    }
+
+    .btn-continue:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 9px 20px rgba(255, 107, 157, 0.32);
+    }
+
+    .btn-back {
+      background: #f3e8f3;
+      color: #b07ab0;
+    }
+
+    #yesAngel {
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 20;
+    }
+
+    #yesAngel.runaway {
+      position: absolute !important;
+    }
+
+    .wrong-emoji, .joke-emoji {
+      font-size: 3rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .wrong-text, .joke-text {
+      font-size: 1.05rem;
+      color: #8a758a;
+      line-height: 1.65;
+      margin-bottom: 1.2rem;
+    }
+
+    .loading-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 1.1rem;
+      animation: spinHeart 2s ease-in-out infinite;
+    }
+
+    @keyframes spinHeart {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.15) rotate(8deg); }
+    }
+
+    .loading-text {
+      font-size: 1.05rem;
+      color: #8a758a;
+      margin-bottom: 1.4rem;
+    }
+
+    .progress-bar {
+      width: 80%;
+      height: 8px;
+      background: #f3e0ea;
+      border-radius: 20px;
+      margin: 0 auto 1.2rem;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff8fb3, #e8b4f0);
+      border-radius: 20px;
+      transition: width 2.2s ease;
+    }
+
+    .heart {
+      font-size: 2.7rem;
+      margin-bottom: 0.7rem;
+      display: inline-block;
+      animation: pulse 1.7s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.16); }
+    }
+
+    .apology-title {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.65rem;
+      color: #e85a8a;
+      margin-bottom: 1.1rem;
+    }
+
+    .message {
+      font-size: 1.02rem;
+      line-height: 1.72;
+      color: #655565;
+      margin-bottom: 1.4rem;
+      text-align: left;
+    }
+
+    .message p {
+      margin-bottom: 0.85rem;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.5s ease;
+    }
+
+    .message p.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .message strong {
+      color: #e85a8a;
+    }
+
+    .line {
+      width: 48px;
+      height: 3px;
+      background: linear-gradient(90deg, #ffb6c1, #e8b4f0);
+      border-radius: 10px;
+      margin: 0 auto 1.3rem;
+    }
+
+    .closing {
+      font-size: 0.95rem;
+      color: #8a758a;
+      line-height: 1.65;
+      margin-bottom: 1.4rem;
+    }
+
+    .sign {
+      font-family: 'Caveat', cursive;
+      font-size: 1.45rem;
+      color: #e85a8a;
+      font-weight: 600;
+    }
+
+    .note {
+      margin-top: 1.6rem;
+      font-size: 0.8rem;
+      color: #b5a0b5;
+    }
+
+    .tiny-hint {
+      margin-top: 1rem;
+      font-size: 0.82rem;
+      color: #c0a8b0;
+      min-height: 1.2em;
+    }
+
+    #yesTrisha {
+      transition: all 0.3s ease;
+      transform-origin: center;
+    }
+
+    /* Quiz styles */
+    .quiz-question {
+      font-size: 1.15rem;
+      color: #6a5a6a;
+      margin-bottom: 1.4rem;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+
+    .quiz-input {
+      width: 100%;
+      max-width: 260px;
+      padding: 12px 16px;
+      border: 2px solid #f0d0e0;
+      border-radius: 50px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      text-align: center;
+      outline: none;
+      background: #fffafc;
+      color: #5c4a5c;
+      transition: border-color 0.2s;
+      margin-bottom: 1rem;
+    }
+
+    .quiz-input:focus {
+      border-color: #ff8fb3;
+    }
+
+    .quiz-error {
+      color: #e85a8a;
+      font-size: 0.9rem;
+      margin-top: 0.6rem;
+      min-height: 1.3em;
+    }
+
+    .quiz-step {
+      font-size: 0.85rem;
+      color: #b5a0b5;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 420px) {
+      .card { padding: 2.1rem 1.4rem; }
+      .title { font-size: 1.6rem; }
+      .message { font-size: 0.98rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="float" style="top: 7%; left: 7%; animation-delay: 0s;">🌸</div>
+  <div class="float" style="top: 11%; right: 9%; animation-delay: 1.4s;">✨</div>
+  <div class="float" style="top: 52%; left: 4%; animation-delay: 2.8s;">💗</div>
+  <div class="float" style="bottom: 14%; right: 7%; animation-delay: 1.9s;">🦋</div>
+  <div class="float" style="bottom: 22%; left: 11%; animation-delay: 3.6s;">🌷</div>
+  <div class="float" style="top: 33%; right: 5%; animation-delay: 0.7s;">💫</div>
+  <div class="float" style="top: 70%; left: 18%; animation-delay: 4.2s;">☁️</div>
+
+  <div class="card">
+
+    <!-- SCREEN 1: Angel (fake) -->
+    <div id="s1" class="screen active">
+      <div class="big-emoji">💌</div>
+      <h1 class="title">hey...</h1>
+      <p class="subtitle">
+        is this <br>
+        <span class="name-pill">Angel</span> ?
+      </p>
+      <div class="btn-group" id="angelBtnGroup">
+        <button class="btn btn-yes" id="yesAngel" onclick="tryYesAngel(event)">yes, it's me 💕</button>
+        <button class="btn btn-no" id="noAngel" onclick="clickNoAngel()" style="display: none;">no...</button>
+      </div>
+      <p class="tiny-hint" id="angelHint"></p>
+    </div>
+
+    <!-- SCREEN 2: Joke after No on Angel -->
+    <div id="s2" class="screen">
+      <div class="joke-emoji">🤭</div>
+      <h1 class="title" style="font-size: 1.6rem;">kidding~</h1>
+      <p class="joke-text">
+        i know you're not Angel 😆<br><br>
+        Angel is just one of the common girl names.<br>
+        i just wanted to flex a bit if you clicked no.
+      </p>
+      <button class="btn btn-continue" onclick="goToTrisha()">continue →</button>
+    </div>
+
+    <!-- SCREEN 3: Real name Trisha -->
+    <div id="s3" class="screen">
+      <div class="big-emoji">💌</div>
+      <h1 class="title">okay for real...</h1>
+      <p class="subtitle">
+        is this <br>
+        <span class="name-pill">Trisha</span> ?
+      </p>
+      <div class="btn-group">
+        <button class="btn btn-yes" id="yesTrisha" onclick="growTrisha(event)">yes, it's me 💕</button>
+        <button class="btn btn-no" onclick="wrongPerson()">no...</button>
+      </div>
+      <p class="tiny-hint" id="trishaHint"></p>
+    </div>
+
+    <!-- SCREEN 4: Wrong person -->
+    <div id="s4" class="screen">
+      <div class="wrong-emoji">🙈</div>
+      <h1 class="title" style="font-size: 1.55rem;">oopsie...</h1>
+      <p class="wrong-text">
+        this little message<br>wasn't meant for you.<br><br>
+        sorry for the mix-up 🌸
+      </p>
+      <button class="btn btn-back" onclick="goBackToTrisha()">go back</button>
+    </div>
+
+    <!-- ========== QUIZ SCREENS ========== -->
+
+    <!-- Quiz 1: Favorite color -->
+    <div id="q1" class="screen">
+      <div class="big-emoji">🎨</div>
+      <p class="quiz-step">question 1 of 3</p>
+      <h1 class="title" style="font-size: 1.5rem;">quick check~</h1>
+      <p class="quiz-question">what's my favorite color?</p>
+      <input type="text" class="quiz-input" id="colorInput" placeholder="type the color..." autocomplete="off">
+      <br>
+      <button class="btn btn-yes" onclick="checkColor()">submit</button>
+      <p class="quiz-error" id="colorError"></p>
+    </div>
+
+    <!-- Quiz 2: Birthday -->
+    <div id="q2" class="screen">
+      <div class="big-emoji">🎂</div>
+      <p class="quiz-step">question 2 of 3</p>
+      <h1 class="title" style="font-size: 1.5rem;">almost there...</h1>
+      <p class="quiz-question">what's my birthday?</p>
+      <input type="date" class="quiz-input" id="bdayInput" style="max-width: 220px; padding: 11px 14px; cursor: pointer;">
+      <br>
+      <button class="btn btn-yes" onclick="checkBday()">submit</button>
+      <p class="quiz-error" id="bdayError"></p>
+    </div>
+
+    <!-- Quiz 3: Favorite to draw -->
+    <div id="q3" class="screen">
+      <div class="big-emoji">✏️</div>
+      <p class="quiz-step">question 3 of 3</p>
+      <h1 class="title" style="font-size: 1.5rem;">last one...</h1>
+      <p class="quiz-question">what's my favorite thing to draw?</p>
+      <input type="text" class="quiz-input" id="drawInput" placeholder="type your answer..." autocomplete="off">
+      <br>
+      <button class="btn btn-yes" onclick="checkDraw()">submit</button>
+      <p class="quiz-error" id="drawError"></p>
+    </div>
+
+    <!-- Failed quiz -->
+    <div id="qFail" class="screen">
+      <div class="wrong-emoji">🥺</div>
+      <h1 class="title" style="font-size: 1.55rem;">hmm...</h1>
+      <p class="wrong-text">
+        that doesn't seem right.<br>
+        this message is only for the real one.
+      </p>
+      <button class="btn btn-back" onclick="restartQuiz()">try again</button>
+    </div>
+
+    <!-- SCREEN 5: Unlocking -->
+    <div id="s5" class="screen">
+      <div class="loading-emoji">🔐</div>
+      <p class="loading-text">unlocking a message for you...</p>
+      <div class="progress-bar">
+        <div class="progress-fill" id="bar"></div>
+      </div>
+      <p style="font-size: 0.85rem; color: #b5a0b5;">just a second 💗</p>
+    </div>
+
+    <!-- SCREEN 6: The apology -->
+    <div id="s6" class="screen">
+      <div class="heart">💔</div>
+      <h2 class="apology-title">i'm really sorry...</h2>
+
+      <div class="message" id="msg">
+        <p>i’ve been hurting a lot lately, and im trying to distract myself by doing this website for u.</p>
+        <p>seeing ur myday na magkasama kayo n all hurts me. <strong>wala ka kasalanan.</strong></p>
+        <p>ure js trying to survive and i understand n hindi ko na dapat na tinitignan pa kasi yon.</p>
+        <p>there’s this heavy feeling that just won’t leave. every time i think about you, it comes back.</p>
+        <p>its the best for me to ignore it all nalang<br>(like all of it).</p>
+      </div>
+
+      <div class="line"></div>
+
+      <p class="closing">
+        sayang nawala yung tin can mo<br><br>
+        wala na ako naiwan remembrance sayo<br>
+        but yea, all i can give is this.
+      </p>
+
+      <p class="sign">— someone who still cares</p>
+      <p class="note">you can close this whenever you want 💗</p>
+    </div>
+
+  </div>
+
+  <script>
+    // ========== ANGEL BUTTON (runaway + shrink) ==========
+    let angelClicks = 0;
+    const maxAngelClicks = 5;
+
+    function tryYesAngel(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      angelClicks++;
+      const btn = document.getElementById('yesAngel');
+      const hint = document.getElementById('angelHint');
+
+      if (angelClicks >= maxAngelClicks) {
+        btn.style.opacity = '0';
+        btn.style.transform = 'scale(0)';
+        setTimeout(() => {
+          btn.style.display = 'none';
+          const noBtn = document.getElementById('noAngel');
+          noBtn.style.display = 'inline-block';
+          noBtn.style.animation = 'softAppear 0.5s ease';
+        }, 300);
+        hint.textContent = "okay okay... the button gave up 😭";
+        return;
+      }
+
+      btn.classList.add('runaway');
+
+      // Move only inside the white card
+      const card = document.querySelector('.card');
+      const cardRect = card.getBoundingClientRect();
+      const btnWidth = btn.offsetWidth || 140;
+      const btnHeight = btn.offsetHeight || 48;
+      const margin = 10;
+
+      // Available space inside the card
+      const maxX = card.clientWidth - btnWidth - margin;
+      const maxY = card.clientHeight - btnHeight - margin;
+
+      const randomX = margin + Math.random() * Math.max(0, maxX - margin);
+      const randomY = margin + Math.random() * Math.max(0, maxY - margin);
+
+      btn.style.left = randomX + 'px';
+      btn.style.top = randomY + 'px';
+
+      const scale = 1 - (angelClicks * 0.15);
+      btn.style.transform = `scale(${scale})`;
+      btn.style.fontSize = (1 - angelClicks * 0.08) + 'rem';
+      btn.style.padding = `${13 - angelClicks * 1.5}px ${26 - angelClicks * 3}px`;
+
+      const messages = [
+        "nope~ try again 😏",
+        "still not for Angel~",
+        "getting smaller...",
+        "almost gone...",
+        "last chance!"
+      ];
+      hint.textContent = messages[angelClicks - 1] || "";
+    }
+
+    function clickNoAngel() {
+      show('s2');
+    }
+
+    // ========== TRISHA BUTTON (grows bigger) ==========
+    let trishaClicks = 0;
+    const maxTrishaClicks = 5;
+
+    function growTrisha(e) {
+      trishaClicks++;
+      const btn = document.getElementById('yesTrisha');
+      const hint = document.getElementById('trishaHint');
+
+      if (trishaClicks >= maxTrishaClicks) {
+        // After 5 clicks → go to quiz instead of direct unlock
+        startQuiz();
+        return;
+      }
+
+      const scale = 1 + (trishaClicks * 0.22);
+      btn.style.transform = `scale(${scale})`;
+      btn.style.fontSize = (1 + trishaClicks * 0.08) + 'rem';
+      btn.style.padding = `${13 + trishaClicks * 3}px ${26 + trishaClicks * 5}px`;
+
+      const messages = [
+        "are you sure? 👀",
+        "getting bigger...",
+        "still sure?",
+        "one more time...",
+        "okay okay 💕"
+      ];
+      hint.textContent = messages[trishaClicks - 1] || "";
+    }
+
+    // ========== QUIZ ==========
+    function startQuiz() {
+      show('q1');
+      document.getElementById('colorInput').value = '';
+      document.getElementById('colorError').textContent = '';
+    }
+
+    function checkColor() {
+      const answer = document.getElementById('colorInput').value.trim().toLowerCase();
+      const error = document.getElementById('colorError');
+
+      if (answer === 'black') {
+        show('q2');
+        document.getElementById('bdayInput').value = '';
+        document.getElementById('bdayError').textContent = '';
+      } else {
+        error.textContent = "that's not it... try again or give up 🥺";
+        // After wrong answer, go to fail after short delay or immediately
+        setTimeout(() => show('qFail'), 900);
+      }
+    }
+
+    function checkBday() {
+      const value = document.getElementById('bdayInput').value; // format: YYYY-MM-DD
+      const error = document.getElementById('bdayError');
+
+      // Correct date is October 26, 2002 → 2002-10-26
+      if (value === '2002-10-26') {
+        show('q3');
+        document.getElementById('drawInput').value = '';
+        document.getElementById('drawError').textContent = '';
+      } else if (!value) {
+        error.textContent = "please pick a date first~";
+      } else {
+        error.textContent = "not the right date...";
+        setTimeout(() => show('qFail'), 900);
+      }
+    }
+
+    function checkDraw() {
+      const answer = document.getElementById('drawInput').value.trim().toLowerCase();
+      const error = document.getElementById('drawError');
+
+      if (answer === 'star' || answer === 'stars') {
+        // All correct → unlock the message
+        unlockMessage();
+      } else {
+        error.textContent = "nope...";
+        setTimeout(() => show('qFail'), 900);
+      }
+    }
+
+    function restartQuiz() {
+      // Reset Trisha button and go back to Trisha confirmation
+      trishaClicks = 0;
+      const btn = document.getElementById('yesTrisha');
+      btn.style.transform = '';
+      btn.style.fontSize = '';
+      btn.style.padding = '';
+      document.getElementById('trishaHint').textContent = '';
+      show('s3');
+    }
+
+    // ========== NORMAL FLOW ==========
+    function show(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function goToTrisha() {
+      show('s3');
+    }
+
+    function unlockMessage() {
+      show('s5');
+      setTimeout(() => {
+        document.getElementById('bar').style.width = '100%';
+      }, 80);
+
+      setTimeout(() => {
+        show('s6');
+        const paras = document.querySelectorAll('#msg p');
+        paras.forEach((p, i) => {
+          setTimeout(() => p.classList.add('show'), 280 + i * 400);
+        });
+      }, 2300);
+    }
+
+    function wrongPerson() {
+      show('s4');
+    }
+
+    function goBackToTrisha() {
+      trishaClicks = 0;
+      const btn = document.getElementById('yesTrisha');
+      btn.style.transform = '';
+      btn.style.fontSize = '';
+      btn.style.padding = '';
+      document.getElementById('trishaHint').textContent = '';
+      show('s3');
+    }
+
+    // Allow Enter key on inputs
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if (document.getElementById('q1').classList.contains('active')) checkColor();
+        else if (document.getElementById('q2').classList.contains('active')) checkBday();
+        else if (document.getElementById('q3').classList.contains('active')) checkDraw();
+      }
+    });
+  </script>
+</body>
+</html>
